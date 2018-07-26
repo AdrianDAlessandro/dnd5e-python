@@ -1,4 +1,7 @@
 # dnd5e-python
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/AdrianDAlessandro/dnd5e-python/master?filepath=character_scripting.ipynb)
+
 A repository of a python-based interactive character sheet for Dungeons & Dragons 5th Edition
 
 Currently only an idea and a jupyter notebook for scripting ideas
