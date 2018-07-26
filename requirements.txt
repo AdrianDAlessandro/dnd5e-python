@@ -1,0 +1,7 @@
+Cython>=0.25.0
+ipyleaflet
+ipytest
+jupyter>=1.0.0
+nbstripout
+notebook>=5.4.1
+pytest
