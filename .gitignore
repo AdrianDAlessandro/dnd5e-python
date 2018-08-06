@@ -1,3 +1,4 @@
 .ipynb_checkpoints/
 .gitattributes
 .pytest_cache/
+env/
