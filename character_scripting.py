@@ -60,18 +60,32 @@ import ipytest.magics
 
 # #### Make sure the tests are defined *before* the main code is written:
 
-# In[7]:
+# In[2]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\ndef test_Character_can_be_created():\n    assert Character()')
+def test_Character_can_be_created():
+    assert Character()
+
+
+# In[3]:
+
+
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
 
 
 # #### Test failed (because we are yet to define `Character`). "Refactor" the code:
 
-# In[8]:
+# In[4]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Character(object):\n    pass')
+class Character(object):
+    pass
+
+
+# In[5]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ### [This process](https://en.wikipedia.org/wiki/Test-driven_development#Test-driven_development_cycle) should be repeated for each new requirement
@@ -94,26 +108,74 @@ get_ipython().run_cell_magic('run_pytest', '', '\nclass Character(object):\n    
 
 # 1. **Write** the test(s)
 
-# In[9]:
+# In[6]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\ndef test_Character_fields():\n\n    field_list = ["name", "_race", "character_class", "level"]\n    inputs = "Merret","Halfling","Ranger", 8\n    test_character = Character(*inputs) # * operator unpacks tuple (** for dict)\n    test_fields = [field for field in dir(test_character)]\n    \n    for inpt, field in zip(inputs, field_list):\n        if field not in test_fields:\n            assert getattr(test_character, field)\n        elif inpt != getattr(test_character,field):\n            assert inpt == getattr(test_character,field)\n    assert True\n\ndef test_Character_for_level_default():\n    assert 1 == Character("Merret","Halfling","Ranger").level')
+def test_Character_fields():
+
+    field_list = ["name", "_race", "character_class", "level"]
+    inputs = "Merret","Halfling","Ranger", 8
+    test_character = Character(*inputs) # * operator unpacks tuple (** for dict)
+    test_fields = [field for field in dir(test_character)]
+    
+    for inpt, field in zip(inputs, field_list):
+        if field not in test_fields:
+            assert getattr(test_character, field)
+        elif inpt != getattr(test_character,field):
+            assert inpt == getattr(test_character,field)
+    assert True
+
+def test_Character_for_level_default():
+    assert 1 == Character("Merret","Halfling","Ranger").level
 
 
 # 2. **Run** the tests
 
-# In[10]:
+# In[7]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\nclass Character(object):\n    \n    def __init__(self, name, race, character_class, level=1):\n        self.name = name\n        self._race = race\n        self.character_class = character_class\n        self.level = level')
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
 
 
 # 3. **Refactor** - The initial test does not include any inputs to `Character`. Include default values.
 
+# In[8]:
+
+
+class Character(object):
+    
+    def __init__(self, name, race, character_class, level=1):
+        self.name = name
+        self._race = race
+        self.character_class = character_class
+        self.level = level
+
+
+# In[9]:
+
+
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+
+
+# 3.1 **Continue Refactoring** - The initial test does not include any inputs to `Character`. Include default values.
+
+# In[10]:
+
+
+class Character(object):
+    
+    def __init__(self, name="Merret", race="Halfling",
+                 character_class="Ranger", level=1):
+        self.name = name
+        self._race = race
+        self.character_class = character_class
+        self.level = level
+
+
 # In[11]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\nclass Character(object):\n    \n    def __init__(self, name="Merret", race="Halfling",\n                 character_class="Ranger", level=1):\n        self.name = name\n        self._race = race\n        self.character_class = character_class\n        self.level = level')
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
 
 
 # ## 3. Make it that `Character` "has a" `Race` and "has a" `CharacterClass`
@@ -132,22 +194,72 @@ def test_Character_has_a_CharacterClass():
 # In[13]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\nclass Race(object):\n    \n    def __init__(self, race):\n        self._race = race\n    \n    def __str__(self):\n        return self._race\n\n\nclass CharacterClass(object):\n    \n    def __init__(self, character_class):\n        self.character_class = character_class\n    \n    def __str__(self):\n        return self.character_class\n\n\nclass Character(object):\n    \n    def __init__(self, name="Merret", race="Halfling",\n                 character_class="Ranger", level=1):\n        self.name = name\n        self._race = Race(race) # Changed Line\n        self.character_class = CharacterClass(character_class) # Changed Line\n        self.level = level')
+class Race(object):
+    
+    def __init__(self, race):
+        self._race = race
+    
+    def __str__(self):
+        return self._race
 
 
-# #### The new requirement breaks the `test_Character_fields` test. Refactor the tests to make use of the `__str__` method:
+class CharacterClass(object):
+    
+    def __init__(self, character_class):
+        self.character_class = character_class
+    
+    def __str__(self):
+        return self.character_class
+
+
+class Character(object):
+    
+    def __init__(self, name="Merret", race="Halfling",
+                 character_class="Ranger", level=1):
+        self.name = name
+        self._race = Race(race) # Changed Line
+        self.character_class = CharacterClass(character_class) # Changed Line
+        self.level = level
+
 
 # In[14]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\ndef test_Character_fields():\n\n    field_list = ["name", "_race", "character_class", "level"]\n    inputs = "Merret","Halfling","Ranger", 8\n    test_character = Character(*inputs) # * operator unpacks tuple (** for dict)\n    test_fields = [field for field in dir(test_character)]\n    \n    for inpt, field in zip(inputs, field_list):\n        if field not in test_fields:\n            assert getattr(test_character, field)\n        # Refactor here:\n        elif str(inpt) != str(getattr(test_character,field)):\n            assert str(inpt) == str(getattr(test_character,field))\n    assert True')
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+
+
+# #### The new requirement breaks the `test_Character_fields` test. Refactor the tests to make use of the `__str__` method:
+
+# In[15]:
+
+
+def test_Character_fields():
+
+    field_list = ["name", "_race", "character_class", "level"]
+    inputs = "Merret","Halfling","Ranger", 8
+    test_character = Character(*inputs) # * operator unpacks tuple (** for dict)
+    test_fields = [field for field in dir(test_character)]
+    
+    for inpt, field in zip(inputs, field_list):
+        if field not in test_fields:
+            assert getattr(test_character, field)
+        # Refactor here:
+        elif str(inpt) != str(getattr(test_character,field)):
+            assert str(inpt) == str(getattr(test_character,field))
+    assert True
+
+
+# In[16]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 4. Further develop the `Race` class
 #    - It has subclasses for each race from D&D 5e
 #    - The `__str__` method returns the race name
 
-# In[89]:
+# In[17]:
 
 
 # Is a Race
@@ -168,18 +280,63 @@ def test_Race_subclasses():
     assert True
 
 
-# In[91]:
+# In[18]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\nclass Race(object):\n    \n    def __init__(self):\n        pass\n    \n    def __str__(self):\n        return type(self).__name__ # returns the name of the class\n\n    \nclass Dwarf(Race):\n    pass\nclass Elf(Race):\n    pass\nclass Halfling(Race):\n    pass\nclass Human(Race):\n    pass\nclass Dragonborn(Race):\n    pass\nclass Gnome(Race):\n    pass\nclass HalfElf(Race):\n    pass\nclass HalfOrc(Race):\n    pass\nclass Tiefling(Race):\n    pass')
+class Race(object):
+    
+    def __init__(self):
+        pass
+    
+    def __str__(self):
+        return type(self).__name__ # returns the name of the class
+
+    
+class Dwarf(Race):
+    pass
+class Elf(Race):
+    pass
+class Halfling(Race):
+    pass
+class Human(Race):
+    pass
+class Dragonborn(Race):
+    pass
+class Gnome(Race):
+    pass
+class HalfElf(Race):
+    pass
+class HalfOrc(Race):
+    pass
+class Tiefling(Race):
+    pass
+
+
+# In[19]:
+
+
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
 
 
 # #### Must update assignment of `_race` in `Character`
 
-# In[17]:
+# In[20]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Character(object):\n    \n    def __init__(self, name="Merret", race="Halfling",\n                 character_class="Ranger", level=1):\n        self.name = name\n        self._race = globals()[race.title()]() # Changed Line\n        self.character_class = CharacterClass(character_class)\n        self.level = level')
+class Character(object):
+    
+    def __init__(self, name="Merret", race="Halfling",
+                 character_class="Ranger", level=1):
+        self.name = name
+        self._race = globals()[race.title()]() # Changed Line
+        self.character_class = CharacterClass(character_class)
+        self.level = level
+
+
+# In[21]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 5. Further develop the `CharacterClass` class
@@ -187,7 +344,7 @@ get_ipython().run_cell_magic('run_pytest', '', '\nclass Character(object):\n    
 #    - The `__str__` method returns the character class name
 #    - Each subclass has a flag for if it is a spellcaster
 
-# In[105]:
+# In[22]:
 
 
 def test_CharacterClass_subclasses():
@@ -212,76 +369,177 @@ def test_CharacterClass_subclasses():
     assert True
 
 
-# In[86]:
+# In[23]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass CharacterClass(object):\n    \n    def __init__(self, spellcaster=False):\n        self.spellcaster = spellcaster\n    \n    def __str__(self):\n        return type(self).__name__ # returns the name of the class\n\n    \nclass Barbarian(CharacterClass):\n    def __init__(self):\n        super().__init__()\n\nclass Bard(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Cleric(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Druid(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Fighter(CharacterClass):\n    def __init__(self):\n        super().__init__()\n\nclass Monk(CharacterClass):\n    def __init__(self):\n        super().__init__()\n\nclass Paladin(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Ranger(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Rogue(CharacterClass):\n    def __init__(self):\n        super().__init__()\n\nclass Sorcerer(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Warlock(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\nclass Wizard(CharacterClass):\n    def __init__(self):\n        super().__init__(spellcaster=True)\n\n\n# Same problem will occur as when changing Race, so update assignment of\n# character_class in Character now\nclass Character(object):\n    \n    def __init__(self, name="Merret", race="Halfling",\n                 character_class="Ranger", level=1):\n        self.name = name\n        self._race = globals()[race.title()]()\n        self.character_class = globals()[character_class.title()]() # Changed\n        self.level = level')
+class CharacterClass(object):
+    
+    def __init__(self, spellcaster=False):
+        self.spellcaster = spellcaster
+    
+    def __str__(self):
+        return type(self).__name__ # returns the name of the class
+
+    
+class Barbarian(CharacterClass):
+    def __init__(self):
+        super().__init__()
+
+class Bard(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Cleric(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Druid(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Fighter(CharacterClass):
+    def __init__(self):
+        super().__init__()
+
+class Monk(CharacterClass):
+    def __init__(self):
+        super().__init__()
+
+class Paladin(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Ranger(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Rogue(CharacterClass):
+    def __init__(self):
+        super().__init__()
+
+class Sorcerer(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Warlock(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+class Wizard(CharacterClass):
+    def __init__(self):
+        super().__init__(spellcaster=True)
+
+
+# Same problem will occur as when changing Race, so update assignment of
+# character_class in Character now
+class Character(object):
+    
+    def __init__(self, name="Merret", race="Halfling",
+                 character_class="Ranger", level=1):
+        self.name = name
+        self._race = globals()[race.title()]()
+        self.character_class = globals()[character_class.title()]() # Changed
+        self.level = level
+
+
+# In[24]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 6. Initialise a `Player` class which "is a" `Character`
 
-# In[92]:
+# In[25]:
 
 
 def test_Player_is_a_Character():
     assert isinstance(Player(),Character)
 
 
-# In[93]:
+# In[26]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Player(Character):\n    pass')
+class Player(Character):
+    pass
+
+
+# In[27]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 7. Initialise a `NonPlayer` class which "is a" `Character`
 
-# In[22]:
+# In[28]:
 
 
 def test_NonPlayer_is_a_Character():
     assert isinstance(NonPlayer(),Character)
 
 
-# In[94]:
+# In[29]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass NonPlayer(Character):\n    pass')
+class NonPlayer(Character):
+    pass
+
+
+# In[30]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 8. Initialise a `Weapon` class
 
-# In[24]:
+# In[31]:
 
 
 def test_Weapon_can_be_created():
     assert Weapon()
 
 
-# In[25]:
+# In[32]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Weapon(object):\n    pass')
+class Weapon(object):
+    pass
+
+
+# In[33]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 9. Initialise a `Spell` class
 
-# In[26]:
+# In[34]:
 
 
 def test_Spell_can_be_created():
     assert Spell()
 
 
-# In[27]:
+# In[35]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Spell(object):\n    pass')
+class Spell(object):
+    pass
+
+
+# In[36]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 10. Initialise an `Ability` class
 #    - `Ability` has the `check()` method and `modifier` and `score` properties
 
-# In[95]:
+# In[37]:
 
 
 def test_Ability_fields():
@@ -295,15 +553,31 @@ def test_Ability_fields():
     assert True
 
 
-# In[96]:
+# In[38]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '\nimport random\n\nclass Ability(object):\n    \n    def __init__(self, score=10):\n        self.score = score\n        self.modifier = int((score - 10) / 2)\n        \n    def check(self):\n        return random.randint(1,20) + self.modifier\n    ')
+import random
+
+class Ability(object):
+    
+    def __init__(self, score=10):
+        self.score = score
+        self.modifier = int((score - 10) / 2)
+        
+    def check(self):
+        return random.randint(1,20) + self.modifier
+    
+
+
+# In[39]:
+
+
+get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
 
 
 # ## 11. Each ability (`Strength` etc...) is a subclass of `Ability`
 
-# In[102]:
+# In[40]:
 
 
 # Is an Ability
@@ -322,17 +596,34 @@ def test_Ability_subclasses():
     assert True
 
 
-# In[103]:
+# In[41]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Strength(Ability):\n    pass\nclass Dexterity(Ability):\n    pass\nclass Constitution(Ability):\n    pass\nclass Intelligence(Ability):\n    pass\nclass Wisdom(Ability):\n    pass\nclass Charisma(Ability):\n    pass')
+class Strength(Ability):
+    pass
+class Dexterity(Ability):
+    pass
+class Constitution(Ability):
+    pass
+class Intelligence(Ability):
+    pass
+class Wisdom(Ability):
+    pass
+class Charisma(Ability):
+    pass
+
+
+# In[42]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 12. Each `Ability` subclass has skills
 #    - Skills and saving throws are kept in a dictionary called `proficiencies`
 #    - `proficiencies` key:value pairs are all `skill : <bool>`
 
-# In[154]:
+# In[43]:
 
 
 # Refactor the previous test
@@ -361,10 +652,87 @@ def test_Ability_subclasses():
     assert True
 
 
-# In[155]:
+# In[44]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '\nclass Strength(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = ["Saving Throws", "Athletics"]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    \nclass Dexterity(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = [\n            "Saving Throws", "Acrobatics",\n            "Sleight of Hand", "Stealth"\n        ]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    \nclass Constitution(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = ["Saving Throws"]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    \nclass Intelligence(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = [\n            "Saving Throws", "Arcana", "History",\n            "Investigation", "Nature", "Religion"\n        ]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    \nclass Wisdom(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = [\n            "Saving Throws", "Animal Handling", "Insight",\n            "Medicine", "Perception", "Survival"\n        ]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    \nclass Charisma(Ability):\n    \n    def __init__(self, score=10, proficiencies=[]):\n        skill_list = [\n            "Saving Throws", "Deception", "Intimidation",\n            "Performance", "Persuasion"\n        ]\n        proficiencies = [prof.title() for prof in proficiencies]\n        self.proficiencies = {\n            skill:skill in proficiencies for skill in skill_list\n        }\n        super().__init__(score)\n    ')
+class Strength(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = ["Saving Throws", "Athletics"]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+class Dexterity(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = [
+            "Saving Throws", "Acrobatics",
+            "Sleight of Hand", "Stealth"
+        ]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+class Constitution(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = ["Saving Throws"]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+class Intelligence(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = [
+            "Saving Throws", "Arcana", "History",
+            "Investigation", "Nature", "Religion"
+        ]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+class Wisdom(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = [
+            "Saving Throws", "Animal Handling", "Insight",
+            "Medicine", "Perception", "Survival"
+        ]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+class Charisma(Ability):
+    
+    def __init__(self, score=10, proficiencies=[]):
+        skill_list = [
+            "Saving Throws", "Deception", "Intimidation",
+            "Performance", "Persuasion"
+        ]
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
+        super().__init__(score)
+    
+
+
+# In[45]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 13. Initialise a `Background` class
