@@ -14,6 +14,18 @@ python3 -m venv ./env
 
 Then activate the environment following the [appropriate instructions](https://docs.python.org/3/library/venv.html#creating-virtual-environments) for your OS.
 
+For bash:
+
+```bash
+source env/Scripts/activate
+```
+
+For cmd:
+
+```cmd
+env\Scripts\activate.bat
+```
+
 And finally, install the required packages:
 
 ```bash

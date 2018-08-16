@@ -36,17 +36,19 @@
 #     - Skills and saving throws are kept in a dictionary called `proficiencies`
 #     - `proficiencies` key:value pairs are all `skill : <bool>`
 # 13. Initialise a `Background` class
-#    - Contains a list of `proficiencies` and a description string
-# 14. Each `Character` has a list of `Abilities`
+#    - Contains a list of `proficiencies` and a `description` string
+# 14. Each `Background` subclass exists and determines skill proficiencies available
+#    - Limited by the SRD, can only use Acolyte
+# 15. Each `Character` has a list of `Abilities`
 #    - The abilities for each character have scores and proficiencies
 #    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
 #    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
-# 15. Include function to create a custom `Race` and a `CharacterClass`
-# 16. 
+# 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
+# 17. 
 
 # #### First, import the testing modules:
 
-# In[1]:
+# In[3]:
 
 
 # Set the file name for unit testing iwth ipytest
@@ -641,7 +643,7 @@ def test_Ability_subclasses():
         if ability not in subclasses:
             assert False, '{0} is not a subclass of Ability'.format(ability)
         # Has proficiencies dictionary
-        elif not isinstance(subclasses[ability].proficiencies,dict):
+        elif not isinstance(subclasses[ability].proficiencies, dict):
             assert False, '{0} does not have proficiencies dict'.format(ability)
         # Values in proficiencies are booleans
         profs = subclasses[ability].proficiencies
@@ -736,9 +738,79 @@ get_ipython().run_cell_magic('run_pytest', '', '#')
 
 
 # ## 13. Initialise a `Background` class
-#    - Contains a list of `proficiencies` and a description string
+#    - Contains a list of `proficiencies` and a `description` string
 
-# ## 14. Each `Character` has a list of `Abilities`
+# In[47]:
+
+
+def test_Background():
+
+    if not isinstance(Background().description,str):
+        assert False, "Background has no description string"
+    elif not isinstance(Background().proficiencies,list):
+        assert False, "Background has no proficiencies list"
+    assert True
+
+
+# In[4]:
+
+
+class Background(object):
+    
+    def __init__(self, proficiencies=[], description="Background superclass"):
+        self.proficiencies = proficiencies
+        self.description = description
+
+
+# In[54]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
+
+
+# ## 14. Each `Background` subclass exists and determines skill proficiencies available
+#    - Limited by the SRD, can only use Acolyte
+
+# In[40]:
+
+
+def test_Acolyte():
+
+    subclasses = [cls.__name__ for cls in Background.__subclasses__()]
+    
+    # Is a Background
+    if "Acolyte" not in subclasses:
+        assert False, 'Acolyte is not a subclass of Background'
+    # Has proficiencies list
+    elif not isinstance(Acolyte().proficiencies, list):
+        assert False, 'Acolyte does not have proficiencies list'
+    # Values in proficiencies are strings
+    elif not Acolyte().proficiencies:
+        assert False, 'Acolyte.proficiencies is empty'
+    for prof in Acolyte().proficiencies:
+        if not isinstance(prof, str):
+            assert False, 'Acolyte.proficiencies contains a non str'
+    assert True
+
+
+# In[43]:
+
+
+class Acolyte(Background):
+    
+    def __init__(self, description="An Acolyte"):
+        proficiencies = ["Insight", "Religion"]
+        print(proficiencies)
+        super().__init__(proficiencies, description)
+
+
+# In[44]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
+
+
+# ## 15. Each `Character` has a list of `Abilities`
 #    - The abilities for each character have scores and proficiencies
 #    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
 #    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
@@ -756,11 +828,17 @@ class Character(object):
         self.level = level
 
 
-# ## 15. Include function to create a custom `Race` and a `CharacterClass`
+# In[44]:
+
+
+get_ipython().run_cell_magic('run_pytest', '', '#')
+
+
+# ## 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
 
 # ## Convert Notebook to a Python Script
 
-# In[ ]:
+# In[46]:
 
 
 get_ipython().system('jupyter nbconvert --to script character_scripting.ipynb')
