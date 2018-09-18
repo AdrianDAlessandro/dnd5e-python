@@ -48,14 +48,14 @@
 
 # #### First, import the testing modules:
 
-# In[3]:
+# In[1]:
 
 
 # Set the file name for unit testing iwth ipytest
 __file__ = "character_scripting.ipynb"
 
 import pytest
-import ipytest.magics
+from ipytest import run_pytest
 
 
 # ## 1. Initialise a `Character` object
@@ -72,7 +72,7 @@ def test_Character_can_be_created():
 # In[3]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # #### Test failed (because we are yet to define `Character`). "Refactor" the code:
@@ -87,7 +87,7 @@ class Character(object):
 # In[5]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ### [This process](https://en.wikipedia.org/wiki/Test-driven_development#Test-driven_development_cycle) should be repeated for each new requirement
@@ -136,7 +136,7 @@ def test_Character_for_level_default():
 # In[7]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # 3. **Refactor** - The initial test does not include any inputs to `Character`. Include default values.
@@ -156,7 +156,7 @@ class Character(object):
 # In[9]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # 3.1 **Continue Refactoring** - The initial test does not include any inputs to `Character`. Include default values.
@@ -177,7 +177,7 @@ class Character(object):
 # In[11]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # ## 3. Make it that `Character` "has a" `Race` and "has a" `CharacterClass`
@@ -227,7 +227,7 @@ class Character(object):
 # In[14]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # #### The new requirement breaks the `test_Character_fields` test. Refactor the tests to make use of the `__str__` method:
@@ -254,7 +254,7 @@ def test_Character_fields():
 # In[16]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 4. Further develop the `Race` class
@@ -317,7 +317,7 @@ class Tiefling(Race):
 # In[19]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # #### Must update assignment of `_race` in `Character`
@@ -338,7 +338,7 @@ class Character(object):
 # In[21]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 5. Further develop the `CharacterClass` class
@@ -447,7 +447,7 @@ class Character(object):
 # In[24]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 6. Initialise a `Player` class which "is a" `Character`
@@ -469,7 +469,7 @@ class Player(Character):
 # In[27]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 7. Initialise a `NonPlayer` class which "is a" `Character`
@@ -491,7 +491,7 @@ class NonPlayer(Character):
 # In[30]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 8. Initialise a `Weapon` class
@@ -513,7 +513,7 @@ class Weapon(object):
 # In[33]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 9. Initialise a `Spell` class
@@ -535,7 +535,7 @@ class Spell(object):
 # In[36]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 10. Initialise an `Ability` class
@@ -574,7 +574,7 @@ class Ability(object):
 # In[39]:
 
 
-get_ipython().run_cell_magic('run_pytest', '-v --tb=line', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
 
 
 # ## 11. Each ability (`Strength` etc...) is a subclass of `Ability`
@@ -618,7 +618,7 @@ class Charisma(Ability):
 # In[42]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 12. Each `Ability` subclass has skills
@@ -734,13 +734,13 @@ class Charisma(Ability):
 # In[45]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 13. Initialise a `Background` class
 #    - Contains a list of `proficiencies` and a `description` string
 
-# In[47]:
+# In[46]:
 
 
 def test_Background():
@@ -752,7 +752,7 @@ def test_Background():
     assert True
 
 
-# In[4]:
+# In[47]:
 
 
 class Background(object):
@@ -762,16 +762,16 @@ class Background(object):
         self.description = description
 
 
-# In[54]:
+# In[48]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 14. Each `Background` subclass exists and determines skill proficiencies available
 #    - Limited by the SRD, can only use Acolyte
 
-# In[40]:
+# In[49]:
 
 
 def test_Acolyte():
@@ -793,7 +793,7 @@ def test_Acolyte():
     assert True
 
 
-# In[43]:
+# In[50]:
 
 
 class Acolyte(Background):
@@ -804,10 +804,10 @@ class Acolyte(Background):
         super().__init__(proficiencies, description)
 
 
-# In[44]:
+# In[51]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest()
 
 
 # ## 15. Each `Character` has a list of `Abilities`
@@ -815,7 +815,7 @@ get_ipython().run_cell_magic('run_pytest', '', '#')
 #    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
 #    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
 
-# In[ ]:
+# In[52]:
 
 
 class Character(object):
@@ -828,23 +828,33 @@ class Character(object):
         self.level = level
 
 
-# In[44]:
+# In[53]:
 
 
-get_ipython().run_cell_magic('run_pytest', '', '#')
+run_pytest(pytest_options=["-v", "--tb=line"])
+
+
+# In[54]:
+
+
+class Player(Character):
+    pass
+class NonPlayer(Character):
+    pass
+run_pytest()
 
 
 # ## 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
 
 # ## Convert Notebook to a Python Script
 
-# In[46]:
+# In[55]:
 
 
 get_ipython().system('jupyter nbconvert --to script character_scripting.ipynb')
 
 
-# In[ ]:
+# In[56]:
 
 
 # Main class for Player Characters - "is a" Character
@@ -874,7 +884,7 @@ class Player(Character):
         pass
 
 
-# In[ ]:
+# In[57]:
 
 
 # Main class for Non-Player Characters - "is a" Character
@@ -882,7 +892,7 @@ class NonPlayer(Character):
     pass
 
 
-# In[ ]:
+# In[58]:
 
 
 merret = Player("Merret Strongheart",
