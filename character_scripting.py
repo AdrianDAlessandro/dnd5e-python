@@ -44,7 +44,8 @@
 #    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
 #    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
 # 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
-# 17. 
+# 17. Be able to return list of options for in-combat. ie list of Actions, Bonus Actions, Movemment
+# 18. 
 
 # #### First, import the testing modules:
 
@@ -845,6 +846,8 @@ run_pytest()
 
 
 # ## 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
+
+# ## 17. Be able to return list of options for in-combat. ie list of Actions, Bonus Actions, Movemment
 
 # ## Convert Notebook to a Python Script
 
