@@ -1,5 +1,5 @@
+jupyter
+nbstripout
+notebook
 pytest
 ipytest
-jupyter>=1.0.0
-nbstripout
-notebook>=5.4.1

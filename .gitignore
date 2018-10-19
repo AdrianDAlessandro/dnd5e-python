@@ -2,3 +2,4 @@
 .gitattributes
 .pytest_cache/
 env/
+Pipfile*
