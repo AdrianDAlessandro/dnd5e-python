@@ -259,6 +259,9 @@ def test_Acolyte():
 #    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
 #    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
 
+def test_Character_Abilities():
+    assert isinstance(Character().abilities, list)
+
 # ## 16. Include function to create a custom `Race`, `CharacterClass`, and `Background`
 
 # ## 17. Be able to return list of options for in-combat. ie list of Actions, Bonus Actions, Movemment
