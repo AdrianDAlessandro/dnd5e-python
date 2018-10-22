@@ -8,6 +8,18 @@ Currently a jupyter notebook for scripting ideas and a module with some unit tes
 
 Using `pytest` for the unit tests, there is a `Dockerfile` that can be used to run the tests in a docker container.
 
+To build the docker image, from the directory containing the Dockerfile, run:
+
+```bash
+docker build -t dnd5e-test .
+```
+
+Then start the container to run the unit tests with:
+
+```bash
+docker run -v `pwd`:/usr/src/app dnd5e-test
+```
+
 If you do not have Docker, run the tests in your prefered virtual environment, or base environment if you have pytest installed, with the command:
 
 ```bash
