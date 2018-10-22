@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Run app.py when the container launches
-CMD ["python", "./character_scripting.py"]
+CMD ["py.test"]
