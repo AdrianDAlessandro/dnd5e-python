@@ -202,6 +202,14 @@ class Character(object):
         self.character_class = globals()[character_class.title()]()
         self.level = level
 
+    def __str__(self):
+        return "A level {0} {1} {2} called {3}".format(
+            self.level,
+            str(self._race).title(),
+            str(self.character_class),
+            self.name.title()
+        )
+
 
 class Player(Character):
     pass
