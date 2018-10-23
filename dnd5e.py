@@ -210,16 +210,20 @@ class NonPlayer(Character):
 
 
 # A couple of test characters:
-merret = Player("Merret Strongheart",
-                   "Halfling",
-                   "ranger",
-                   #[12, 20, 12, 8, 16, 8],
-                   9)
-print(merret.character_class)
-print(merret.character_class.spellcaster)
-print(merret)
+if __name__ == "__main__":
+    merret = Player("Merret Strongheart",
+                    "Halfling",
+                    "ranger",
+                    #[12, 20, 12, 8, 16, 8],
+                    9)
+    print(merret.character_class)
+    print(merret.character_class.spellcaster)
+    print(merret)
 
-despair = Player("Despair", "Tiefling", "Sorcerer", #[9, 11, 15, 14, 13, 20], 
-                 8)
-print(despair.character_class.spellcaster)
-print(despair)
+    despair = Player("Despair",
+                     "Tiefling",
+                     "Sorcerer",
+                     #[9, 11, 15, 14, 13, 20],
+                     8)
+    print(despair.character_class.spellcaster)
+    print(despair)
