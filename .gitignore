@@ -4,3 +4,4 @@
 env/
 Pipfile*
 __pycache__/
+*.pyc

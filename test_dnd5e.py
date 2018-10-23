@@ -63,25 +63,35 @@ def test_Character_for_level_default():
 # - Each is a class of it's own
 # - Build in the ability to check the string with a `__str__` method
 def test_Character_has_a_Race():
-    assert isinstance(Character()._race, Race)
+    assert isinstance(Character().race, Race)
 
 def test_Character_has_a_CharacterClass():
     assert isinstance(Character().character_class, CharacterClass)
 
 def test_Character_fields():
 
-    field_list = ["name", "_race", "character_class", "level"]
-    inputs = "Merret","Halfling","Ranger", 8
-    test_character = Character(*inputs) # * operator unpacks tuple (** for dict)
+    inputs = {
+        "name" : "NameA1",
+        "race" : "Human",
+        "character_class" : "Rogue",
+        "ability_scores" : [12] * 6,
+        "level" : 8
+    }
+    field_list = ["name", "race", "character_class", "level"]
+    test_character = Character(**inputs) # * operator unpacks tuple (** for dict)
     test_fields = [field for field in dir(test_character)]
     
-    for inpt, field in zip(inputs, field_list):
+    for field in field_list:
+        inpt = inputs[field]
         if field not in test_fields:
             assert getattr(test_character, field)
-        # Refactor here:
         elif str(inpt) != str(getattr(test_character,field)):
             assert str(inpt) == str(getattr(test_character,field))
-    assert True
+
+    # Check the ability scores worked
+    for ability, score in zip(test_character.abilities, inputs["ability_scores"]):
+        if ability.score != score:
+            assert ability.score == score
 
 
 # ## 4. Further develop the `Race` class
