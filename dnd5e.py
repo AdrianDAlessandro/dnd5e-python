@@ -1,14 +1,14 @@
 import random
 
 class Race(object):
-    
+
     def __init__(self):
         pass
-    
+
     def __str__(self):
         return type(self).__name__ # returns the name of the class
 
-    
+
 class Dwarf(Race):
     pass
 class Elf(Race):
@@ -30,14 +30,14 @@ class Tiefling(Race):
 
 
 class CharacterClass(object):
-    
+
     def __init__(self, spellcaster=False):
         self.spellcaster = spellcaster
-    
+
     def __str__(self):
         return type(self).__name__ # returns the name of the class
 
-    
+
 class Barbarian(CharacterClass):
     def __init__(self):
         super().__init__()
@@ -96,17 +96,17 @@ class Spell(object):
 
 
 class Ability(object):
-    
+
     def __init__(self, score=10):
         self.score = score
         self.modifier = int((score - 10) / 2)
-        
+
     def check(self):
         return random.randint(1,20) + self.modifier
-    
+
 
 class Strength(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = ["Saving Throws", "Athletics"]
         proficiencies = [prof.title() for prof in proficiencies]
@@ -114,9 +114,9 @@ class Strength(Ability):
             skill:skill in proficiencies for skill in skill_list
         }
         super().__init__(score)
-    
+
 class Dexterity(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = [
             "Saving Throws", "Acrobatics",
@@ -127,9 +127,9 @@ class Dexterity(Ability):
             skill:skill in proficiencies for skill in skill_list
         }
         super().__init__(score)
-    
+
 class Constitution(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = ["Saving Throws"]
         proficiencies = [prof.title() for prof in proficiencies]
@@ -137,9 +137,9 @@ class Constitution(Ability):
             skill:skill in proficiencies for skill in skill_list
         }
         super().__init__(score)
-    
+
 class Intelligence(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = [
             "Saving Throws", "Arcana", "History",
@@ -150,9 +150,9 @@ class Intelligence(Ability):
             skill:skill in proficiencies for skill in skill_list
         }
         super().__init__(score)
-    
+
 class Wisdom(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = [
             "Saving Throws", "Animal Handling", "Insight",
@@ -163,9 +163,9 @@ class Wisdom(Ability):
             skill:skill in proficiencies for skill in skill_list
         }
         super().__init__(score)
-    
+
 class Charisma(Ability):
-    
+
     def __init__(self, score=10, proficiencies=[]):
         skill_list = [
             "Saving Throws", "Deception", "Intimidation",
@@ -179,14 +179,14 @@ class Charisma(Ability):
 
 
 class Background(object):
-    
+
     def __init__(self, proficiencies=[], description="Background superclass"):
         self.proficiencies = proficiencies
         self.description = description
 
 
 class Acolyte(Background):
-    
+
     def __init__(self, description="An Acolyte"):
         proficiencies = ["Insight", "Religion"]
         print(proficiencies)
@@ -194,7 +194,7 @@ class Acolyte(Background):
 
 
 class Character(object):
-    
+
     def __init__(self, name="Merret", race="Halfling",
                  character_class="Ranger", ability_scores=[10]*6, level=1):
         self.name = name
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     merret = Player("Merret Strongheart",
                     "Halfling",
                     "ranger",
-                    #[12, 20, 12, 8, 16, 8],
+                    [12, 20, 12, 8, 16, 8],
                     9)
     print(merret.character_class)
     print(merret.character_class.spellcaster)
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     despair = Player("Despair",
                      "Tiefling",
                      "Sorcerer",
-                     #[9, 11, 15, 14, 13, 20],
+                     [9, 11, 15, 14, 13, 20],
                      8)
     print(despair.character_class.spellcaster)
     print(despair)
