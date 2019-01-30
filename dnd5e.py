@@ -97,9 +97,14 @@ class Spell(object):
 
 class Ability(object):
 
-    def __init__(self, score=10):
+    def __init__(self, score=10, proficiencies=[], skill_list=["Saving Throws"]):
         self.score = score
         self.modifier = int((score - 10) / 2)
+        
+        proficiencies = [prof.title() for prof in proficiencies]
+        self.proficiencies = {
+            skill:skill in proficiencies for skill in skill_list
+        }
 
     def check(self):
         return random.randint(1,20) + self.modifier
@@ -109,11 +114,7 @@ class Strength(Ability):
 
     def __init__(self, score=10, proficiencies=[]):
         skill_list = ["Saving Throws", "Athletics"]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 class Dexterity(Ability):
 
@@ -122,21 +123,13 @@ class Dexterity(Ability):
             "Saving Throws", "Acrobatics",
             "Sleight of Hand", "Stealth"
         ]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 class Constitution(Ability):
 
     def __init__(self, score=10, proficiencies=[]):
         skill_list = ["Saving Throws"]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 class Intelligence(Ability):
 
@@ -145,11 +138,7 @@ class Intelligence(Ability):
             "Saving Throws", "Arcana", "History",
             "Investigation", "Nature", "Religion"
         ]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 class Wisdom(Ability):
 
@@ -158,11 +147,7 @@ class Wisdom(Ability):
             "Saving Throws", "Animal Handling", "Insight",
             "Medicine", "Perception", "Survival"
         ]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 class Charisma(Ability):
 
@@ -171,11 +156,7 @@ class Charisma(Ability):
             "Saving Throws", "Deception", "Intimidation",
             "Performance", "Persuasion"
         ]
-        proficiencies = [prof.title() for prof in proficiencies]
-        self.proficiencies = {
-            skill:skill in proficiencies for skill in skill_list
-        }
-        super().__init__(score)
+        super().__init__(score, proficiencies, skill_list)
 
 
 class Background(object):
