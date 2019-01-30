@@ -241,10 +241,10 @@ def test_Character_str():
 
 # ## 16. Each `Character` has a list of `Abilities`
 #    - The abilities for each character have scores and proficiencies
-#    - The proficiencies for each character are determined by the `Race`, `CharacterClass` and `Background`
-#    - `Race` and `CharacterClass` each have a list of `proficiencies` (or a list to choose from), just like in `Background`
+#    - The proficiencies for each character are determined by the user
 def test_Character_Abilities():
-    assert isinstance(Character().abilities, list)
+    assert isinstance(Character().abilities, list), "No abilities list"
+    assert all([isinstance(a, Ability) for a in Character().abilities]), "Abilities is not a list of `Ability`s"
 
 
 # ## 17. Include function to create a custom `Race`, `CharacterClass`, and `Background`

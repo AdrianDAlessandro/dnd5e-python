@@ -177,18 +177,19 @@ class Acolyte(Background):
 class Character(object):
 
     def __init__(self, name="Merret", race="Halfling",
-                 character_class="Ranger", ability_scores=[10]*6, level=1):
+                 character_class="Ranger", ability_scores=[10]*6, level=1,
+                 proficiencies=[]):
         self.name = name
         self.race = globals()[race.title()]()
         self.character_class = globals()[character_class.title()]()
         self.level = level
         self.abilities = [
-            Strength(ability_scores[0]),
-            Dexterity(ability_scores[1]),
-            Constitution(ability_scores[2]),
-            Intelligence(ability_scores[3]),
-            Wisdom(ability_scores[4]),
-            Charisma(ability_scores[5])
+            Strength(ability_scores[0], proficiencies=proficiencies),
+            Dexterity(ability_scores[1], proficiencies=proficiencies),
+            Constitution(ability_scores[2], proficiencies=proficiencies),
+            Intelligence(ability_scores[3], proficiencies=proficiencies),
+            Wisdom(ability_scores[4], proficiencies=proficiencies),
+            Charisma(ability_scores[5], proficiencies=proficiencies)
         ]
 
     def __str__(self):
