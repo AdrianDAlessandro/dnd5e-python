@@ -199,6 +199,9 @@ class Character(object):
             str(self.character_class),
             self.name.title()
         )
+    
+    def combat_turn(self):
+        print("You can take an Action, Bonus Action, and Move")
 
 
 class Player(Character):
